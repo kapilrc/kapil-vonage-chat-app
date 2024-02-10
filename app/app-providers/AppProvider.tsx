@@ -6,7 +6,7 @@ type Prop = {
   children: JSX.Element;
 };
 
-const AppProvider: React.FC<Prop> = ({ children }) => {
+const AppProvider: React.FC<Prop> = ({ children }): JSX.Element => {
   return (
     <AppRouterCacheProvider>
       <ThemeProvider>{children}</ThemeProvider>
