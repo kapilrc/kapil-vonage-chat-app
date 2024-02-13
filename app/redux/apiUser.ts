@@ -6,7 +6,16 @@ type apiCreateUser = {
 };
 export type apiUser = { id: string; name: string };
 
-const injectedRtkApi = apiClient
+export type GetUsersResp = {
+  users: apiUser[];
+};
+
+export type GetUserByIdResp = apiUser;
+export type apiGetUserById = {
+  userId: string;
+};
+
+const userApi = apiClient
   .enhanceEndpoints({
     addTagTypes: ['users']
   })
@@ -19,10 +28,21 @@ const injectedRtkApi = apiClient
           body: { name }
         }),
         invalidatesTags: ['users']
+      }),
+      getUsers: builder.query<GetUsersResp, unknown>({
+        query: () => ({
+          url: '/getUsers'
+        }),
+        providesTags: ['users']
+      }),
+      getUserById: builder.query<GetUserByIdResp, apiGetUserById>({
+        query: ({ userId }) => ({ url: `/users/${userId}` }),
+        providesTags: ['users']
       })
     }),
     overrideExisting: false
   });
-export { injectedRtkApi as enhancedApi };
+export { userApi };
 
-export const { useCreateUserMutation } = injectedRtkApi;
+export const { useCreateUserMutation, useGetUsersQuery, useGetUserByIdQuery } =
+  userApi;
