@@ -1,13 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { apiChat } from '../chat/apiChat';
 
-export const store = configureStore({
-  reducer: {
-    [apiChat.reducerPath]: apiChat.reducer
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiChat.middleware)
-});
+export const store = () => {
+  return configureStore({
+    reducer: {
+      [apiChat.reducerPath]: apiChat.reducer
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(apiChat.middleware),
+    devTools: process.env.NODE_ENV !== 'production'
+  });
+};
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+// Infer the type of makeStore
+export type AppStore = ReturnType<typeof store>;
+export type RootState = ReturnType<AppStore['getState']>;
+export type AppDispatch = AppStore['dispatch'];
