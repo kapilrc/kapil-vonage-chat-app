@@ -2,24 +2,23 @@
 import { useState } from 'react';
 import { TextField, Button, Stack } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { useCreateUserMutation } from './api';
 import { enqueueSnackbar } from 'notistack';
+import { useCreateUserMutation } from './redux/apiUser';
 
 const Home = () => {
   const router = useRouter();
   const [name, setName] = useState<string>('');
-  const [createUser, { isLoading }] = useCreateUserMutation();
+  const [createUser, { isLoading, error }] = useCreateUserMutation();
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
 
   const handleCreateUser = async () => {
-    // create username - wip
     try {
-      const data = await createUser({ username: name }).unwrap();
+      const data = await createUser({ name }).unwrap();
       console.log(data);
-      router.push('/chat');
+      // router.push('/chat');
     } catch (error: any) {
       let message = error?.data?.detail || 'Unknown Error';
       enqueueSnackbar(message, {

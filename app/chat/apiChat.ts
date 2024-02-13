@@ -1,4 +1,4 @@
-import { apiClient } from '../api';
+import { apiClient } from '../_utils/apiClient';
 
 type Conversation = {
   userId: string;
