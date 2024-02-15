@@ -28,7 +28,12 @@ const CreateUser = () => {
   };
 
   return (
-    <Stack spacing={3}>
+    <Stack
+      spacing={3}
+      direction="row"
+      justifyContent="space-between"
+      alignItems="center"
+    >
       <TextField label="Username" value={name} onChange={handleNameChange} />
       <Button
         variant="contained"

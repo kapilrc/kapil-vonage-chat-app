@@ -39,7 +39,12 @@ const CreateChatRoom = () => {
   };
 
   return (
-    <Stack spacing={3}>
+    <Stack
+      spacing={3}
+      direction="row"
+      justifyContent="space-between"
+      alignItems="center"
+    >
       <TextField
         label="Chat room name"
         value={ChatRoomName}
