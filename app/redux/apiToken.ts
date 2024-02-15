@@ -13,8 +13,8 @@ const injectedRtkApi = apiClient
     addTagTypes: ['token']
   })
   .injectEndpoints({
-    endpoints: (build) => ({
-      generateToken: build.mutation<ApiToken, TokenByUserProp>({
+    endpoints: (builder) => ({
+      generateToken: builder.mutation<ApiToken, TokenByUserProp>({
         query: ({ name }) => {
           return {
             url: `/getJWT`,

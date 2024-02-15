@@ -1,16 +1,16 @@
 'use client';
 import React, { useEffect } from 'react';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import CreateUser from './CreateUserForm';
 import UserList from './UserList';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { useGetUsersQuery } from '../redux/apiUser';
 import {
   selectedUserId as currentUser,
-  setAllUsers,
+  // setAllUsers,
   setSelectedUserId
 } from '../redux/userSlice';
-import { Typography } from '@mui/material';
 
 const UserSection = () => {
   const { data, isLoading, isError } = useGetUsersQuery({});
@@ -22,9 +22,9 @@ const UserSection = () => {
     dispatch(setSelectedUserId(userId));
   };
 
-  useEffect(() => {
-    dispatch(setAllUsers);
-  }, [data?.users, dispatch]);
+  // useEffect(() => {
+  //   dispatch(setAllUsers());
+  // }, [data?.users, dispatch]);
 
   return (
     <Stack spacing={3}>

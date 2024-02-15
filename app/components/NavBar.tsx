@@ -1,11 +1,11 @@
 'use client';
-import Link from 'next/link';
 import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import MuiToolbar from '@mui/material/Toolbar';
-import { styled } from '@mui/material';
+import { Typography, styled } from '@mui/material';
+import MoreActions from './MoreActions';
 
 const Toolbar = styled(MuiToolbar)(({ theme }) => ({
   '>a': {
@@ -20,16 +20,17 @@ const Toolbar = styled(MuiToolbar)(({ theme }) => ({
   }
 }));
 
-const Navbar: React.FC = () => {
+type NavBarProps = {
+  showLogout?: boolean;
+  name?: string;
+  conversation?: string;
+};
+
+const Navbar = ({ children }) => {
   return (
     <AppBar position="fixed" color="primary">
-      <Container maxWidth="lg" disableGutters>
-        <Toolbar>
-          <Link href="/" rel="preload">
-            ChatApp
-          </Link>
-          <Box sx={{ flexGrow: 1 }} />
-        </Toolbar>
+      <Container maxWidth="xs" disableGutters>
+        <Toolbar disableGutters>{children}</Toolbar>
       </Container>
     </AppBar>
   );

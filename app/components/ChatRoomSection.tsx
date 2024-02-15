@@ -6,8 +6,8 @@ import ChatRoomList from './ChatRoomList';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { useGetConversationsQuery } from '../redux/apiChatRoom';
 import {
-  selectedConversationId as currentConversationId,
-  setAllCoversations,
+  selectedConversation,
+  // setAllCoversations,
   setConversationId
 } from '../redux/chatRoomSlice';
 import useAuth from '../hooks/useAuth';
@@ -20,7 +20,7 @@ const ChatRoomSection = () => {
   const [generateToken, { data: token }] = useGenerateTokenMutation({});
 
   const currentUser = useAppSelector(getUserById);
-  const selectedConversationId = useAppSelector(currentConversationId);
+  const selectedChatRoomId = useAppSelector(selectedConversation);
 
   const dispatch = useAppDispatch();
   const { login } = useAuth();
@@ -29,9 +29,9 @@ const ChatRoomSection = () => {
     dispatch(setConversationId(userId));
   };
 
-  useEffect(() => {
-    dispatch(setAllCoversations);
-  }, [data?.conversations, dispatch]);
+  // useEffect(() => {
+  //   dispatch(setAllCoversations(data?.conversations));
+  // }, [data?.conversations, dispatch]);
 
   useEffect(() => {
     if (currentUser?.id) {
@@ -54,7 +54,7 @@ const ChatRoomSection = () => {
       <ChatRoomList
         conversations={data?.conversations}
         handleSelectChatRoom={handleSelectChatRoom}
-        selectedChatRoomId={selectedConversationId}
+        selectedChatRoomId={selectedChatRoomId}
       />
 
       {/* Create user form */}

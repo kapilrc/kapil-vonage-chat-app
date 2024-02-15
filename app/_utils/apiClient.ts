@@ -8,6 +8,7 @@ const baseQuery = fetchBaseQuery({
 });
 
 export const apiClient = createApi({
+  keepUnusedDataFor: 35000,
   baseQuery,
   endpoints: (builder) => ({})
 });

@@ -1,4 +1,4 @@
-import { apiChat } from '../chat/apiChat';
+import { apiChat } from './apiChat';
 
 type CreateConversationApiArg = {
   name: string;

@@ -1,29 +1,29 @@
 import NexmoClient from 'nexmo-client';
 import { useGenerateTokenMutation } from '../redux/apiToken';
 import {
-  getConversationById,
-  selectedConversationId
+  selectedConversation,
+  setConversationId
 } from '../redux/chatRoomSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   getUserById,
   selectedUserId,
+  setSelectedUserId,
   setSession,
+  setToken,
   token
 } from '../redux/userSlice';
 import { useCallback, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 const useAuth = () => {
   const dispatch = useAppDispatch();
-
-  const userId = useAppSelector(selectedUserId);
-  const conversationId = useAppSelector(selectedConversationId);
-
-  const currentConversation = useAppSelector(getConversationById);
+  const router = useRouter();
 
   const [generateToken, { data }] = useGenerateTokenMutation({});
 
   const currentUser = useAppSelector(getUserById);
+  const currentConversation = useAppSelector(selectedConversation);
   const jwtToken = useAppSelector(token);
 
   // prevent change on every render
@@ -40,13 +40,20 @@ const useAuth = () => {
     }
   }, []);
 
+  const logout = () => {
+    dispatch(setConversationId(''));
+    dispatch(setSelectedUserId(''));
+    dispatch(setToken(''));
+    router.push('/');
+  };
+
   useEffect(() => {
     if (data?.jwt || jwtToken) {
       login(data?.jwt || jwtToken);
     }
   }, [data, jwtToken, login]);
 
-  return { login, jwtToken, currentConversation, currentUser };
+  return { login, jwtToken, currentConversation, currentUser, logout };
 };
 
 export default useAuth;

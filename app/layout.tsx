@@ -21,8 +21,12 @@ export default function RootLayout({
       <body className={inter.className}>
         <AppProvider>
           <>
-            <Navbar />
-            <Container sx={{ marginTop: 12 }} maxWidth="xs">
+            {/* <Navbar /> */}
+            <Container
+              sx={{ marginTop: { xs: 5, md: 6 } }}
+              maxWidth="xs"
+              disableGutters
+            >
               {children}
             </Container>
           </>
