@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+A simple chat app using Vonage Communications API.
+- Create User
+- Create a conversation
+- Add the user to the conversation
+- Chat between multiple users
 
 ## Getting Started
 
-First, run the development server:
+Clone the repo
+
+```bash
+git clone https://github.com/kapilrc/kapil-vonage-chat-app.git
+cd kapil-vonage-chat-app
+```
+
+create .env.local file in the root folder
+
+NEXT_PUBLIC_VONAGE_BASEURL=http://localhost:4000
+
+For Chat-api service, an express backend,, [please refer instruction here](https://github.com/kapilrc/chat-api-service/blob/master/README.md)
+
+Now, install dependencies
+
+```bash
+npm install
+# or
+yarn
+```
+
+run the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- next
+- redux/toolkit - store setup, rtk query
+- react-redux - to let react components read data from a Redux store, and dispatch actions to the store to update state
+- material ui - React component library
+- nexmo-client - The Client SDK to provide a ready solution for developers to build Programmable Conversation applications across multiple Channels including: Messages, websockets
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Journeys
+Home
+- Create user, list users
+- Create chat room, list chat rooms
+- Enter chat room
 
-## Learn More
+Chat room
+- load Messages
+- type message to send
+- logout from session
 
-To learn more about Next.js, take a look at the following resources:
+### Screenshots
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+![Create users and conversations view](https://github.com/kapilrc/kapil-vonage-chat-app/blob/master/public/home%20page.png)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+![Chat room](https://github.com/kapilrc/kapil-vonage-chat-app/blob/master/public/chat%20room.png)
