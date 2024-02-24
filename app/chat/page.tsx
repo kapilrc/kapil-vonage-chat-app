@@ -3,14 +3,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Box,
+  CircularProgress,
   IconButton,
   Stack,
   Typography,
   styled
 } from '@mui/material';
 import MuiTextField from '@mui/material/TextField';
+import MuiCard from '@mui/material/Card';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import { Conversation } from 'nexmo-client';
+import { Conversation, NexmoApiError } from 'nexmo-client';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../redux/hooks';
 import { getUserById, session } from '../redux/userSlice';
@@ -20,13 +22,14 @@ import {
   getMessagesByConversationId,
   saveMessages
 } from '../redux/messagesSlice';
-import uniqBy from 'lodash';
+import { uniqBy } from 'lodash';
 import Navbar from '../components/NavBar';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 
 const ConversationSection = styled(Box)(({ theme }) => ({
-  minHeight: 'calc(100vh - 146px)',
-  padding: theme.spacing(3, 2)
+  height: 'calc(100vh - 146px)',
+  padding: theme.spacing(3, 2),
+  overflowY: 'scroll'
 }));
 
 const TypeMessageSection = styled(Box)(({ theme }) => ({
@@ -38,66 +41,47 @@ const TextField = styled(MuiTextField)(({ theme }) => ({
   minWidth: '80%'
 }));
 
+const Card = styled(MuiCard)(({ theme }) => ({
+  padding: theme.spacing(1),
+  marginBottom: theme.spacing(2),
+  background: theme.palette.grey[200],
+  maxWidth: '70%',
+  float: 'left',
+  clear: 'both',
+  '&.right': {
+    float: 'right',
+    background: theme.palette.primary.main,
+    p: {
+      color: '#fff'
+    }
+  }
+}));
+
 const ChatPage = () => {
   const dispatch = useDispatch();
   const [alert, setAlert] = useState('');
 
   const user = useAppSelector(getUserById);
   const appSession = useAppSelector(session);
-  const { jwtToken, logout } = useAuth();
+  const { loading, jwtToken, logout } = useAuth();
 
   const [text, setText] = useState('');
   const getMessages = useAppSelector(getMessagesByConversationId);
   const [messages, setMessages] = useState(uniqBy(getMessages, 'key'));
-
-  const chatBoxRef = useRef<HTMLDivElement>();
-  const inputRef = useRef<HTMLInputElement>();
-  let typing = useRef('');
   const [conversation, setConversation] = useState<Conversation>();
   const currentConversation = useAppSelector(selectedConversation);
 
-  const onMessage = (sender, message) => {
-    const { userName, userId } = sender;
-    const { id, body, time } = message;
-    const newMessages = {
-      id,
-      key: id,
-      sender: userName,
-      userId,
-      text: body.text,
-      time,
-      conversationId: currentConversation?.id
-    };
-
-    setMessages((prev) => {
-      let data = uniqBy([...prev, newMessages], 'key');
-      dispatch(saveMessages(data));
-      return data;
-    });
-
-    chatBoxRef.current.scrollTo({
-      top: 100000,
-      behavior: 'auto'
-    });
-  };
+  // messages
+  useEffect(() => {
+    console.log('messages', messages);
+  }, [messages]);
 
   useEffect(() => {
     if (conversation) {
-      inputRef?.current?.addEventListener('keypress', (e) => {
-        conversation?.startTyping();
-      });
-
-      inputRef?.current?.addEventListener('keyup', (e) => {
-        conversation?.stopTyping();
-      });
-
       conversation.on('text:typing:on', (data, e) => {
         if (conversation?.me?.id !== data?.memberId) {
-          typing.current = data?.userName;
+          console.log(`${data.userName}is typing...`);
         }
-      });
-      conversation.on('text:typing:off', (data) => {
-        typing.current = '';
       });
     }
   }, [conversation]);
@@ -108,24 +92,39 @@ const ChatPage = () => {
     }
     if (currentConversation?.id) {
       if (appSession) {
-        appSession?.getConversation(currentConversation?.id).then((c) => {
-          const newMessages = {
-            id: 'ssd',
-            key: 'id',
-            sender: 'userName',
-            userId: 1,
-            text: 'sdfsfsdf',
-            time: 'sdfsf',
-            conversationId: currentConversation?.id
-          };
+        appSession
+          ?.getConversation(currentConversation?.id)
+          .then((conversation) => {
+            console.log(conversation);
+            conversation.on('text', (sender, message) => {
+              const { userId, userName } = sender;
+              const {
+                id,
+                body: { text },
+                timestamp
+              } = message;
+              const newMessages = {
+                id,
+                key: id,
+                sender: userName,
+                userId: userId,
+                text,
+                time: timestamp,
+                conversationId: currentConversation?.id
+              };
 
-          setMessages((prev) => {
-            let data = uniqBy([...prev, newMessages], 'key');
-            dispatch(saveMessages(data));
-            return data;
+              setMessages((prev) => {
+                let data = uniqBy([...prev, newMessages], 'key');
+                dispatch(saveMessages(data));
+                return data;
+              });
+            });
+            conversation.join();
+            setConversation(conversation);
+          })
+          .catch((err: NexmoApiError) => {
+            console.log(err);
           });
-          setConversation(c);
-        });
       }
     }
   }, [user, currentConversation, appSession, jwtToken]);
@@ -135,10 +134,11 @@ const ChatPage = () => {
     if (!text) return;
 
     conversation
-      ?.sendMessage({
-        text,
-        message_type: 'text'
-      })
+      // ?.sendMessage({
+      //   text,
+      //   message_type: 'text'
+      // })
+      ?.sendText(text)
       .then((event) => {
         console.log('message was sent', event);
         setConversation(event?.conversation);
@@ -169,16 +169,40 @@ const ChatPage = () => {
         </IconButton>
       </Navbar>
       <Stack justifyContent="space-between" mt={7}>
-        <ConversationSection ref={chatBoxRef}>
-          <Typography>Hello</Typography>
+        <ConversationSection>
+          {loading && (
+            <Box textAlign="center">
+              <CircularProgress />
+            </Box>
+          )}
           {messages.map((message) => {
             if (message?.userId === user?.id)
-              return <div key={message?.id}>{message?.text}</div>;
+              return (
+                <Card className="right" variant="outlined" key={message?.id}>
+                  <Typography
+                    sx={{ fontSize: 12 }}
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    {message?.sender}
+                  </Typography>
+                  <Typography>{message?.text}</Typography>
+                </Card>
+              );
             return (
-              <div key={message?.id}>
-                <div>{message.sender}</div>
-                <div className="message other">{message?.text}</div>
-              </div>
+              <Card variant="outlined" key={message?.id}>
+                <Typography
+                  textAlign="right"
+                  sx={{ fontSize: 12 }}
+                  color="text.secondary"
+                  gutterBottom
+                >
+                  {message.sender}
+                </Typography>
+                <Typography className="message other">
+                  {message?.text}
+                </Typography>
+              </Card>
             );
           })}
           {alert && <Alert severity="error">This is an error Alert.</Alert>}
@@ -195,12 +219,11 @@ const ChatPage = () => {
             >
               <TextField
                 type="text"
-                ref={inputRef}
                 value={text}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setText(e?.target?.value)
                 }
-                placeholder="Enter the message..."
+                placeholder="Type a message..."
               />
               <IconButton type="submit">
                 <SendRoundedIcon />

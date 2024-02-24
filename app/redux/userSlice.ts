@@ -12,7 +12,7 @@ const initialState = {
   ...userAdapter.getInitialState(),
   selectedUserId: '',
   token: '',
-  session: null as any
+  session: null
 };
 
 const usersAdapter = createEntityAdapter<apiUser>();

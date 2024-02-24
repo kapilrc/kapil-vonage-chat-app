@@ -31,11 +31,12 @@ const CreateChatRoom = () => {
     setChatRoomName(event.target.value);
   };
 
-  const handleCreateUser = async () => {
+  const handleCreateChatRoom = async () => {
     createConversation({
       name: ChatRoomName,
       display_name: ChatRoomName
     });
+    setChatRoomName('');
   };
 
   return (
@@ -52,7 +53,7 @@ const CreateChatRoom = () => {
       />
       <Button
         variant="contained"
-        onClick={handleCreateUser}
+        onClick={handleCreateChatRoom}
         disabled={ChatRoomName.length < 3 || isLoading}
       >
         {isLoading ? 'Creating Chat Room...' : 'Create Chat Room'}
