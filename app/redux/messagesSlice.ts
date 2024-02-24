@@ -13,7 +13,8 @@ const initialState = messagesAdapter.getInitialState({
       userId: '',
       conversationId: ''
     }
-  ]
+  ],
+  inputText: ''
 });
 
 export const messagesSlice = createSlice({
@@ -22,6 +23,10 @@ export const messagesSlice = createSlice({
   reducers: {
     saveMessages: (state, action) => {
       state.messages = action.payload;
+    },
+    submitInputText: (state, action) => {
+      state.inputText = action.payload;
+      console.log('Submitted text:', state.inputText);
     }
   }
 });
@@ -38,4 +43,6 @@ export const getMessagesByConversationId = (state: RootState) => {
       message.conversationId === state.chatRoomSlice.selectedConversationId
   );
 };
-export const { saveMessages } = messagesSlice.actions;
+
+export const inputText = (state: RootState) => state.messagesSlice.inputText;
+export const { saveMessages, submitInputText } = messagesSlice.actions;

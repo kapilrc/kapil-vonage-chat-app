@@ -1,3 +1,4 @@
+'use client';
 import Stack from '@mui/material/Stack';
 import UserSection from './components/UserSection';
 import ChatRoomSection from './components/ChatRoomSection';

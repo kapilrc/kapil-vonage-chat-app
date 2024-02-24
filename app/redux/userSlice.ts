@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 import { RootState } from './store';
 import { GetUserByIdResp, GetUsersResp, apiUser, userApi } from './apiUser';
-import { Application } from 'nexmo-client';
+// import { Application } from 'nexmo-client';
 
 const userAdapter = createEntityAdapter<apiUser>();
 const initialState = {
@@ -70,5 +70,4 @@ export const getUserById = (state: RootState) =>
 
 export const token = (state: RootState) => state.userSlice.token;
 
-export const session = (state: RootState) =>
-  state.userSlice.session as Application;
+export const session = (state: RootState) => state.userSlice.session;

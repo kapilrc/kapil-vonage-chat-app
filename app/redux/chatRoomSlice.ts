@@ -15,7 +15,8 @@ const conversationsAdapter = createEntityAdapter<CreateConversationApiResp>({});
 
 const initialState = {
   ...conversationsAdapter.getInitialState(),
-  selectedConversationId: ''
+  selectedConversationId: '',
+  conversation: null
 };
 
 export const chatRoomSlice = createSlice({
@@ -25,6 +26,9 @@ export const chatRoomSlice = createSlice({
     // setAllCoversations: (state, action) => {
     //   state.allConversations = action.payload;
     // },
+    setConversation: (state, action) => {
+      state.conversation = action.payload;
+    },
     setConversationId: (state, action) => {
       state.selectedConversationId = action.payload;
     }
@@ -45,7 +49,7 @@ export const chatRoomSlice = createSlice({
   }
 });
 
-export const { setConversationId } = chatRoomSlice.actions;
+export const { setConversation, setConversationId } = chatRoomSlice.actions;
 
 export const {
   selectAll: selectAllConvesations,
@@ -54,6 +58,9 @@ export const {
 } = conversationsAdapter.getSelectors(
   (state: RootState) => state.chatRoomSlice ?? initialState
 );
+
+export const chatConversation = (state: RootState) =>
+  state?.chatRoomSlice?.conversation;
 
 export const selectedConversationId = (state: RootState) =>
   state?.chatRoomSlice?.selectedConversationId;
