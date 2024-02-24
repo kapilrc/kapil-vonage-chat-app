@@ -6,14 +6,15 @@ import { enqueueSnackbar } from 'notistack';
 import { useCreateConversationMutation } from '../redux/apiChatRoom';
 
 const CreateChatRoom = () => {
-  const router = useRouter();
   const [ChatRoomName, setChatRoomName] = useState<string>('');
   const [createConversation, { data, isLoading, error }] =
     useCreateConversationMutation({});
 
   useEffect(() => {
-    if (error) {
-      enqueueSnackbar(error?.data?.description, { variant: 'error' });
+    if (error && 'status' in error) {
+      const errMsg =
+        'error' in error ? error.error : JSON.stringify(error.data);
+      enqueueSnackbar(errMsg, { variant: 'error' });
     }
   }, [error]);
 
