@@ -29,7 +29,7 @@ type NavBarProps = {
 const Navbar = ({ children }) => {
   return (
     <AppBar position="fixed" color="primary">
-      <Container maxWidth="xs" disableGutters>
+      <Container maxWidth="xs">
         <Toolbar disableGutters>{children}</Toolbar>
       </Container>
     </AppBar>

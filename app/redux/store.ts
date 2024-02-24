@@ -4,19 +4,19 @@ import {
   combineReducers,
   configureStore
 } from '@reduxjs/toolkit';
-import { persistReducer, persistStore } from 'redux-persist';
+// import { persistReducer, persistStore } from 'redux-persist';
 import { apiChat } from './apiChat';
 import { userSlice } from './userSlice';
 import { chatRoomSlice } from './chatRoomSlice';
 import { messagesSlice } from './messagesSlice';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import storage from 'redux-persist/lib/storage';
+// import storage from 'redux-persist/lib/storage';
 
-const persistConfig = {
-  key: 'root',
-  version: 1,
-  storage: storage
-};
+// const persistConfig = {
+//   key: 'root',
+//   version: 1,
+//   storage: storage
+// };
 
 const rootReducer = combineReducers({
   [apiChat.reducerPath]: apiChat.reducer,
@@ -25,20 +25,19 @@ const rootReducer = combineReducers({
   [messagesSlice.name]: messagesSlice.reducer
 });
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+// WIP: https://redux-toolkit.js.org/usage/usage-guide#working-with-non-serializable-data
+// const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false
-    }).concat([apiChat.middleware]),
+    getDefaultMiddleware().concat(apiChat.middleware),
   devTools: process.env.NODE_ENV !== 'production'
 });
 
 setupListeners(store.dispatch);
 
-export const persistor = persistStore(store);
+// export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
