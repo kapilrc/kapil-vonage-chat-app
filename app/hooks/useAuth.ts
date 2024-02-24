@@ -7,19 +7,18 @@ import {
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   getUserById,
-  selectedUserId,
   setSelectedUserId,
   setSession,
   setToken,
   token
 } from '../redux/userSlice';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 const useAuth = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-
+  const [loading, setLoading] = useState(false);
   const [generateToken, { data }] = useGenerateTokenMutation({});
 
   const currentUser = useAppSelector(getUserById);
@@ -29,10 +28,14 @@ const useAuth = () => {
   // prevent change on every render
   const login = useCallback(async (jwtToken: string) => {
     try {
-      let nexmoClient = new NexmoClient({});
+      setLoading(true);
+      let nexmoClient = new NexmoClient();
       const session = await nexmoClient.createSession(jwtToken);
       dispatch(setSession(session));
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
+      if (err.type == 'session:error:max-open-sessions') return;
       // generate new token for different session
       generateToken({
         name: currentUser?.name
@@ -49,11 +52,12 @@ const useAuth = () => {
 
   useEffect(() => {
     if (data?.jwt || jwtToken) {
+      setLoading(true);
       login(data?.jwt || jwtToken);
     }
   }, [data, jwtToken, login]);
 
-  return { login, jwtToken, currentConversation, currentUser, logout };
+  return { loading, login, jwtToken, currentConversation, currentUser, logout };
 };
 
 export default useAuth;

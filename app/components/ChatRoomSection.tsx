@@ -6,7 +6,7 @@ import ChatRoomList from './ChatRoomList';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { useGetConversationsQuery } from '../redux/apiChatRoom';
 import {
-  selectedConversation,
+  selectedConversationId,
   // setAllCoversations,
   setConversationId
 } from '../redux/chatRoomSlice';
@@ -16,11 +16,11 @@ import { useGenerateTokenMutation } from '../redux/apiToken';
 
 const ChatRoomSection = () => {
   const [ChatRoomName, setChatRoomName] = useState('');
-  const { data, isLoading, isError } = useGetConversationsQuery({});
+  const { data, isLoading, error } = useGetConversationsQuery({});
   const [generateToken, { data: token }] = useGenerateTokenMutation({});
 
   const currentUser = useAppSelector(getUserById);
-  const selectedChatRoomId = useAppSelector(selectedConversation);
+  const selectedChatRoomId = useAppSelector(selectedConversationId);
 
   const dispatch = useAppDispatch();
   const { login } = useAuth();
@@ -47,6 +47,10 @@ const ChatRoomSection = () => {
       login(token?.jwt);
     }
   }, [token?.jwt]);
+
+  if (isLoading) return <p>Loading...</p>;
+
+  if (error) return <p>{JSON.stringify(error)}</p>; //error loading chat
 
   return (
     <Stack spacing={3}>
