@@ -1,3 +1,4 @@
+'use client';
 import NexmoClient from 'nexmo-client';
 import { useGenerateTokenMutation } from '../redux/apiToken';
 import {
