@@ -1,6 +1,16 @@
 import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
 import { RootState } from './store';
 
+export type MessageProps = {
+  text: string;
+  time: string;
+  sender: string;
+  id: string;
+  key: string;
+  userId: string;
+  conversationId: string;
+};
+
 const messagesAdapter = createEntityAdapter({});
 const initialState = messagesAdapter.getInitialState({
   messages: [
@@ -13,7 +23,7 @@ const initialState = messagesAdapter.getInitialState({
       userId: '',
       conversationId: ''
     }
-  ],
+  ] as MessageProps[],
   inputText: ''
 });
 

@@ -4,12 +4,15 @@ import { useAppDispatch, useAppSelector } from '@/src/redux/hooks';
 import { getUserById, session } from '@/src/redux/userSlice';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import MuiCard from '@mui/material/Card';
+import Chip from '@mui/material/Chip';
+import Card from '@mui/material/Card';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material';
+import { Divider, Stack, styled } from '@mui/material';
 import useAuth from '../../hooks/useAuth';
+import moment from 'moment';
 import {
+  MessageProps,
   getMessagesByConversationId,
   inputText,
   saveMessages
@@ -22,25 +25,36 @@ import {
   setConversation
 } from '../../redux/chatRoomSlice';
 import { Application, Conversation } from 'nexmo-client';
+import { Translate } from '@mui/icons-material';
+import ChatMessage from './ChatMessage';
 
 const Wrapper = styled(Box)(({ theme }) => ({
-  height: 'calc(100vh - 146px)',
-  padding: theme.spacing(3, 2),
-  overflowY: 'scroll'
+  padding: theme.spacing(2),
+  overflowY: 'auto',
+  flexGrow: 1
 }));
 
-const Card = styled(MuiCard)(({ theme }) => ({
-  padding: theme.spacing(1),
+const Loader = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  left: '50%',
+  transform: 'translateX(-50%)'
+}));
+
+const ChatWrapper = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
-  background: theme.palette.grey[200],
   maxWidth: '70%',
   float: 'left',
   clear: 'both',
+  '.MuiPaper-root': {
+    padding: theme.spacing(0.5, 2),
+    background: `${theme.palette.primary.main}22`,
+    borderRadius: 20
+  },
   '&.right': {
     float: 'right',
-    background: theme.palette.primary.main,
-    p: {
-      color: '#fff'
+    '.MuiPaper-root': {
+      background: theme.palette.primary.main,
+      color: theme.palette.common.white
     }
   }
 }));
@@ -89,7 +103,7 @@ const ConversationSection = () => {
                 body: { text },
                 timestamp
               } = message;
-              const newMessages = {
+              const newMessages: MessageProps = {
                 id,
                 key: id,
                 sender: userName,
@@ -136,37 +150,19 @@ const ConversationSection = () => {
   return (
     <Wrapper>
       {loading && (
-        <Box textAlign="center">
+        <Loader textAlign="center" position="absolute">
           <CircularProgress />
-        </Box>
+        </Loader>
       )}
+      <Divider textAlign="left">
+        <Chip label={moment().format('D MMMM YYYY')} />
+      </Divider>
       {messages.map((message) => {
         if (message?.userId === user?.id)
           return (
-            <Card className="right" variant="outlined" key={message?.id}>
-              <Typography
-                sx={{ fontSize: 12 }}
-                color="text.secondary"
-                gutterBottom
-              >
-                {message?.sender}
-              </Typography>
-              <Typography>{message?.text}</Typography>
-            </Card>
+            <ChatMessage key={message?.id} content="right" message={message} />
           );
-        return (
-          <Card variant="outlined" key={message?.id}>
-            <Typography
-              textAlign="right"
-              sx={{ fontSize: 12 }}
-              color="text.secondary"
-              gutterBottom
-            >
-              {message.sender}
-            </Typography>
-            <Typography className="message other">{message?.text}</Typography>
-          </Card>
-        );
+        return <ChatMessage key={message?.id} message={message} />;
       })}
       {/* {alert && <Alert severity="error">This is an error Alert.</Alert>} */}
     </Wrapper>
