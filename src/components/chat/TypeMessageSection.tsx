@@ -1,19 +1,30 @@
 'use client';
 import React, { useRef, useState } from 'react';
-import { Box, IconButton, Stack, styled } from '@mui/material';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
+import MuiContainer from '@mui/material/Container';
 import MuiTextField from '@mui/material/TextField';
+import { styled } from '@mui/material';
 
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { submitInputText } from '../../redux/messagesSlice';
 
-const Wrapper = styled(Box)(({ theme }) => ({
-  border: '1px solid',
-  padding: theme.spacing(2)
+const Container = styled(MuiContainer)(({ theme }) => ({
+  padding: theme.spacing(1, 3, 0.5),
+  borderTop: `1px solid ${theme.palette.primary.main}`
 }));
 
 const TextField = styled(MuiTextField)(({ theme }) => ({
-  minWidth: '80%'
+  minWidth: '90%',
+  '.MuiInputBase-root': {
+    border: `1px solid ${theme.palette.primary.main}`,
+    borderRadius: 10,
+    input: {
+      padding: theme.spacing(1.3)
+    }
+  }
 }));
 
 const TypeMessageSection = () => {
@@ -30,10 +41,10 @@ const TypeMessageSection = () => {
   };
 
   return (
-    <Wrapper>
+    <Container>
       <form onSubmit={handleSubmit}>
         <Stack
-          spacing={3}
+          spacing={1}
           direction="row"
           justifyContent="center"
           alignItems="center"
@@ -44,6 +55,7 @@ const TypeMessageSection = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setInputText(e?.target?.value)
             }
+            autoComplete="off"
             placeholder="Type a message..."
           />
           <IconButton type="submit">
@@ -51,7 +63,7 @@ const TypeMessageSection = () => {
           </IconButton>
         </Stack>
       </form>
-    </Wrapper>
+    </Container>
   );
 };
 

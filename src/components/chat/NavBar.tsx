@@ -6,6 +6,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
@@ -14,8 +15,10 @@ import {
 } from '../../redux/chatRoomSlice';
 import { getUserById } from '../../redux/userSlice';
 import MuiNavbar from '../NavBar';
+import { useRouter } from 'next/router';
 
 const NavBar = () => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const { logout } = useAuth();
   const currentConversation = useAppSelector(selectedConversation);
@@ -28,15 +31,21 @@ const NavBar = () => {
 
   return (
     <MuiNavbar>
-      <Stack direction="row" spacing={2}>
-        <Typography>Name: {user?.name}</Typography>
+      <Stack direction="row" spacing={2} alignItems="center">
+        <IconButton
+          onClick={() => {
+            router.push('/');
+          }}
+        >
+          <ArrowBackRoundedIcon sx={{ color: '#fff' }} />
+        </IconButton>
+        <Typography>{user?.name}</Typography>
         <Typography>Room: {currentConversation?.name}</Typography>
+        {/* <IconButton onClick={onLogout}>
+          <LogoutRoundedIcon sx={{ color: '#fff' }} />
+        </IconButton> */}
       </Stack>
       <Box sx={{ flexGrow: 1 }} />
-      <IconButton onClick={onLogout}>
-        {/* color="primary" */}
-        <LogoutRoundedIcon sx={{ color: '#fff' }} />
-      </IconButton>
     </MuiNavbar>
   );
 };
