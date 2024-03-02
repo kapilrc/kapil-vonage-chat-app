@@ -4,8 +4,8 @@ import { Box, IconButton, Stack, styled } from '@mui/material';
 import MuiTextField from '@mui/material/TextField';
 
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { submitInputText } from '../redux/messagesSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { submitInputText } from '../../redux/messagesSlice';
 
 const Wrapper = styled(Box)(({ theme }) => ({
   border: '1px solid',

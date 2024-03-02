@@ -1,4 +1,4 @@
-import { vonage } from '../getJWT/route';
+import { vonage } from '../getJWT';
 
 export async function GET(req, res) {
   vonage.users.get({ ...req.query }, (err, response) => {

@@ -1,13 +1,14 @@
 import Stack from '@mui/material/Stack';
-import UserSection from './components/UserSection';
-import ChatRoomSection from './components/ChatRoomSection';
-import JoinChat from './components/JoinChat';
-import Navbar from './components/NavBar';
+import UserSection from '../components/UserSection';
+import ChatRoomSection from '../components/ChatRoomSection';
+import JoinChat from '../components/JoinChat';
+import Navbar from '../components/NavBar';
 import Link from 'next/link';
+import RootLayout from '../components/RootLayout';
 
 const Home = () => {
   return (
-    <>
+    <RootLayout>
       <Navbar>
         <Link href="/" rel="preload">
           ChatApp
@@ -18,7 +19,7 @@ const Home = () => {
         <ChatRoomSection />
         <JoinChat />
       </Stack>
-    </>
+    </RootLayout>
   );
 };
 

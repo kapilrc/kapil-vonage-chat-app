@@ -1,16 +1,19 @@
 'use client';
 import React from 'react';
-import useAuth from '../hooks/useAuth';
+import useAuth from '../../hooks/useAuth';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { selectedConversation, setConversation } from '../redux/chatRoomSlice';
-import { getUserById } from '../redux/userSlice';
-import MuiNavbar from '../components/NavBar';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import {
+  selectedConversation,
+  setConversation
+} from '../../redux/chatRoomSlice';
+import { getUserById } from '../../redux/userSlice';
+import MuiNavbar from '../NavBar';
 
 const NavBar = () => {
   const dispatch = useAppDispatch();

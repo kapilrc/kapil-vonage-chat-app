@@ -1,8 +1,7 @@
-import { Client } from '@vonage/server-sdk';
-import { vonage } from '../getJWT/route';
+import { vonage } from '../getJWT';
 
 export default async function POST(req, res) {
-  vonage.conversations.create(
+  vonage.users.create(
     {
       name: req.body.name,
       display_name: req.body.display_name || req.body.name,
@@ -10,9 +9,8 @@ export default async function POST(req, res) {
     (err, response) => {
       if (err) {
         return res.status(400).send(err?.body);
-
       } else {
-        res.send({ id: response });
+        res.send({ id: response.id });
       }
     },
   );

@@ -1,5 +1,5 @@
 import { Client } from '@vonage/server-sdk';
-import { vonage } from '../getJWT/route';
+import { vonage } from '../getJWT';
 
 export default async function handler(req, res) {
   vonage.conversations.get({}, (err, response) => {

@@ -4,17 +4,19 @@
 import dotenv from 'dotenv';
 import Vonage from '@vonage/server-sdk';
 import path from 'path';
+import config from '../../../../vonage-config';
 
-dotenv.config({ path: path.resolve(__dirname + '/../../../.env.local') });
+dotenv.config();
+
+console.log(' ============================================= ')
+console.log(__dirname + '/../../../' + process.env.PRIVATE_KEY_PATH)
 // const apiKey = process.env.API_KEY;
 // const apiSecret = process.env.API_SECRET;
 
 export const vonage = new Vonage(
   {
-    apiKey: process.env.API_KEY,
-    apiSecret: process.env.API_SECRET,
-    applicationId: process.env.APP_ID,
-    privateKey: path.resolve(__dirname + '/../../../' + process.env.PRIVATE_KEY_PATH)
+    ...config,
+    privateKey: fs.readFileSync(process.env.PRIVATE_KEY_PATH, 'utf8')
   },
   { debug: true }
 );

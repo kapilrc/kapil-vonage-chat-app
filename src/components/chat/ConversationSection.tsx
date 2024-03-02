@@ -1,26 +1,26 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';
-import { getUserById, session } from '@/app/redux/userSlice';
+import { useAppDispatch, useAppSelector } from '@/src/redux/hooks';
+import { getUserById, session } from '@/src/redux/userSlice';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import MuiCard from '@mui/material/Card';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material';
-import useAuth from '../hooks/useAuth';
+import useAuth from '../../hooks/useAuth';
 import {
   getMessagesByConversationId,
   inputText,
   saveMessages
-} from '../redux/messagesSlice';
+} from '../../redux/messagesSlice';
 import { uniqBy } from 'lodash';
 // import { NexmoApiError } from 'nexmo-client';
 import {
   chatConversation,
   selectedConversation,
   setConversation
-} from '../redux/chatRoomSlice';
+} from '../../redux/chatRoomSlice';
 import { Application, Conversation } from 'nexmo-client';
 
 const Wrapper = styled(Box)(({ theme }) => ({
