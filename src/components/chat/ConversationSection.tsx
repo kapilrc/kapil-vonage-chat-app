@@ -155,7 +155,7 @@ const ConversationSection = () => {
         </Loader>
       )}
       <Divider textAlign="left">
-        <Chip label={moment().format('D MMMM YYYY')} />
+        <Chip label={moment().format('D MMM YYYY')} />
       </Divider>
       {messages.map((message) => {
         if (message?.userId === user?.id)
